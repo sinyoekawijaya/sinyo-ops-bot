@@ -17,8 +17,14 @@ scope = [
     "https://www.googleapis.com/auth/drive",
 ]
 
-creds = ServiceAccountCredentials.from_json_keyfile_name(
-    "credentials.json", scope
+import json
+from oauth2client.service_account import ServiceAccountCredentials
+
+google_creds = json.loads(os.getenv("GOOGLE_CREDENTIALS"))
+
+creds = ServiceAccountCredentials.from_json_keyfile_dict(
+    google_creds, scope
+)
 )
 client = gspread.authorize(creds)
 sheet = client.open_by_key(SPREADSHEET_ID).sheet1
@@ -61,4 +67,5 @@ app.add_handler(CommandHandler("add", add))
 app.add_handler(CommandHandler("list", list_data))
 
 app.run_polling()
+
 
